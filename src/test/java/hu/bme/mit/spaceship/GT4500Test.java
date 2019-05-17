@@ -26,6 +26,7 @@ public class GT4500Test {
     when(primaryTorpedoStore.fire(any(int.class))).thenReturn(true);
     // Act
     boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+    verify(primaryTorpedoStore, times(1)).fire(any(int.class));
 
     // Assert
     assertEquals(true, result);
@@ -38,6 +39,8 @@ public class GT4500Test {
       when(secondaryTorpedoStore.fire(any(int.class))).thenReturn(true);
     // Act
     boolean result = ship.fireTorpedo(FiringMode.ALL);
+      verify(primaryTorpedoStore, times(1)).fire(any(int.class));
+      verify(secondaryTorpedoStore, times(1)).fire(any(int.class));
 
     // Assert
     assertEquals(true, result);
