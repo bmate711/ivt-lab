@@ -16,13 +16,14 @@ public class GT4500Test {
   public void init(){
     primaryTorpedoStore = mock(TorpedoStore.class);
     secondaryTorpedoStore = mock(TorpedoStore.class);
+
     this.ship = new GT4500(primaryTorpedoStore, secondaryTorpedoStore);
   }
 
   @Test
   public void fireTorpedo_Single_Success(){
     // Arrange
-
+    when(primaryTorpedoStore.fire(any(int.class))).thenReturn(true);
     // Act
     boolean result = ship.fireTorpedo(FiringMode.SINGLE);
 
@@ -33,7 +34,8 @@ public class GT4500Test {
   @Test
   public void fireTorpedo_All_Success(){
     // Arrange
-
+      when(primaryTorpedoStore.fire(any(int.class))).thenReturn(true);
+      when(secondaryTorpedoStore.fire(any(int.class))).thenReturn(true);
     // Act
     boolean result = ship.fireTorpedo(FiringMode.ALL);
 
