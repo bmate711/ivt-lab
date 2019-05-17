@@ -46,4 +46,54 @@ public class GT4500Test {
     assertEquals(true, result);
   }
 
+  @Test
+  public void fireTorpedo_firstTimePrimaryStoreFired_Succses(){
+      when(primaryTorpedoStore.fire(any(int.class))).thenReturn(true);
+      when(secondaryTorpedoStore.fire(any(int.class))).thenReturn(true);
+      ship.fireTorpedo(FiringMode.SINGLE);
+      verify(primaryTorpedoStore, times(1)).fire(any(int.class));
+      verify(secondaryTorpedoStore, times(0)).fire(any(int.class));
+  }
+
+    @Test
+    public void fireTorpedo_firedAlternatingStoreFired_Succses(){
+        when(primaryTorpedoStore.fire(any(int.class))).thenReturn(true);
+        when(secondaryTorpedoStore.fire(any(int.class))).thenReturn(true);
+        ship.fireTorpedo(FiringMode.SINGLE);
+        ship.fireTorpedo(FiringMode.SINGLE);
+        ship.fireTorpedo(FiringMode.SINGLE);
+        verify(primaryTorpedoStore, times(2)).fire(any(int.class));
+        verify(secondaryTorpedoStore, times(1)).fire(any(int.class));
+    }
+
+    @Test
+    public void fireTorpedo_primaryStoreEmptySecondPrimaryStoreFired_Succses(){
+        when(primaryTorpedoStore.fire(any(int.class))).thenReturn(true);
+        when(secondaryTorpedoStore.fire(any(int.class))).thenReturn(true);
+        when(primaryTorpedoStore.isEmpty()).thenReturn(true);
+        ship.fireTorpedo(FiringMode.SINGLE);
+        verify(primaryTorpedoStore, times(0)).fire(any(int.class));
+        verify(secondaryTorpedoStore, times(1)).fire(any(int.class));
+  }
+
+  @Test
+  public void fireTorpedo_fireStoreFaliournotTryFireTheOtherone_Succses(){
+      when(primaryTorpedoStore.fire(any(int.class))).thenReturn(false);
+      when(secondaryTorpedoStore.fire(any(int.class))).thenReturn(true);
+      boolean result = ship.fireTorpedo(FiringMode.SINGLE);
+      verify(primaryTorpedoStore, times(1)).fire(any(int.class));
+      verify(secondaryTorpedoStore, times(0)).fire(any(int.class));
+      assertEquals(false, result);
+  }
+
+  @Test
+  public void fireTorpedo_fireAllPrimaryEmpty_Succses(){
+      when(primaryTorpedoStore.fire(any(int.class))).thenReturn(true);
+      when(secondaryTorpedoStore.fire(any(int.class))).thenReturn(true);
+      when(primaryTorpedoStore.isEmpty()).thenReturn(true);
+      ship.fireTorpedo(FiringMode.ALL);
+      verify(primaryTorpedoStore, times(0)).fire(any(int.class));
+      verify(secondaryTorpedoStore, times(1)).fire(any(int.class));
+  }
+
 }
